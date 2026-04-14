@@ -3,7 +3,6 @@ import numpy as np
 
 
 DNA_CONFIG = {
-    # TODO
     'bases_per_turn': 10.5,
     'z_step': 0.34,
     'radius': 1.0,
@@ -15,7 +14,6 @@ DNA_CONFIG = {
 
 class DNAHelixGeometry:
     def __init__(self, n_bases, config=None):
-        # TODO
         if config is None:
             config = DNA_CONFIG
         self.config = dict(config)
@@ -26,12 +24,10 @@ class DNAHelixGeometry:
 
         self.n_turns = float(self.n_bases) / float(self.config.get('bases_per_turn', 10.5))
 
-        # Structures expected by the visualizer
         self.helix1 = []
         self.helix2 = []
         self.base_pairs = []
 
-        # Compute dummy geometry to show progress
         self.calculate_geometry()
 
     def calculate_geometry(self):
