@@ -61,4 +61,30 @@ class DNAHelixGeometry:
             p1 = (r, 0.0, z)
             p2 = (-r, 0.0, z)
             self.base_pairs.append((p1, p2))
+            
+        total_angle = self.n_bases * self.config['angle_step']
+        axis_crossing_phase_shift = np.pi - self.config['strand_offset']
+        if self.n_bases == 1:
+            theta_center = np.array([total_angle / 2])
+        else:
+            theta_center = np.linspace(
+                axis_crossing_phase_shift / 2,
+                total_angle - axis_crossing_phase_shift / 2,
+                self.n_bases,
+                )
+            theta1 = theta_center - axis_crossing_phase_shift / 2
+            theta2 = theta_center + axis_crossing_phase_shift / 2
+            z1_bases = theta1 * self.config['z_step'] / self.config['angle_step']
+            z2_bases = theta2 * self.config['z_step'] / self.config['angle_step']
+            bp1 = list(zip(
+                self.config['radius'] * np.cos(theta1),
+                self.config['radius'] * np.sin(theta1),
+                z1_bases,
+                ))
+            bp2 = list(zip(
+                self.config['radius'] * np.cos(theta2 + self.config['strand_offset']),
+                self.config['radius'] * np.sin(theta2 + self.config['strand_offset']),
+                z2_bases,
+                ))
+            self.base_pairs = list(zip(bp1, bp2))
 
