@@ -40,13 +40,26 @@ class DNAHelixGeometry:
         cfg = self.config
         z_step = float(cfg.get('z_step', 0.34))
         r = float(cfg.get('radius', 1.0))
+        
+        total_angle = self.n_bases * self.config['angle_step']
+        total_z = self.n_bases * self.config['z_step']
 
-        total_z = self.n_bases * z_step
-
+        n_smooth = self.n_bases * self.config['smooth_per_base']
+        theta_smooth = np.linspace(0, total_angle, n_smooth)
+        z_smooth = np.linspace(0, total_z, n_smooth)
+        
+        x1 = self.config['radius'] * np.cos(theta_smooth)
+        y1 = self.config['radius'] * np.sin(theta_smooth)
+        x2 = self.config['radius'] * np.cos(theta_smooth + self.config['strand_offset'])
+        y2 = self.config['radius'] * np.sin(theta_smooth + self.config['strand_offset'])
+        
         # Two points per strand (vertical line) — sufficient for the visualizer to display lines
-        self.helix1 = [(r, 0.0, 0.0), (r, 0.0, total_z)]
-        self.helix2 = [(-r, 0.0, 0.0), (-r, 0.0, total_z)]
-
+        self.helix1 = list(zip(x1, y1, z_smooth)) 
+        self.helix2 = list(zip(x2, y2, z_smooth)) 
+        
+        
+        
+        
     def _calculate_base_pairs(self):
         # TODO
         cfg = self.config
